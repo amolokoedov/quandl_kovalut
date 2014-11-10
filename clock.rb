@@ -13,4 +13,4 @@ def update()
 	puts `quandl upload upd_SBER_7701.csv`
 end
 
-every(1.minutes, 'Updating Rostov Rates') { update() }
+every(30.minutes, 'Updating Rostov Rates') { update() }
