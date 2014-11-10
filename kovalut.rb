@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require "nokogiri"
 require 'rest-open-uri'
 
@@ -7,6 +9,16 @@ data = Hash.new
 city = ARGV[0]
 # 6101 - rostov
 # 7701 - moscow
+download_whole_history = ARGV[1] == "whole"
+
+def describe(bank)
+	return case bank
+	when "Сбербанк России" 
+		["SBER", "Sberbank"]
+	else 
+		[bank, bank]
+	end
+end
 
 begin
 	body = "hd-day=#{t.day}&hd-month=#{t.month}&hd-year=#{t.year}&hd-hour=59&hd-min=59&hl-day=7&hl-hour=0&hl-min=0&ht=1&op=5"
@@ -41,16 +53,17 @@ begin
 		end
 	end
 
-end while count > 0
+end while download_whole_history and count > 0
 
-data.each do |bank, prices| 
+data.each do |bank_id, prices| 
+	bank, name = describe(bank_id)
 	code = bank + '_' + city.to_s 
-	filename = '_' + code + '.csv'
+	filename = (download_whole_history ? "whole" : "upd") + '_' + code + '.csv'
 	puts 'writing ' + filename + '...'
 	File.open(filename, 'w') { |file|
 		file.puts 'code: ' + code
-		file.puts 'name: Exchange Rates for ' + bank
-		file.puts 'description: Exchange Rates for ' + bank
+		file.puts 'name: Exchange Rates for ' + name
+		file.puts 'description: Exchange Rates for ' + name
 		file.puts '-----'
 		file.puts 'Time,USD_BUY,USD_SELL,EUR_BUY,EUR_SELL'
 		prices.sort.map do |key, val|
