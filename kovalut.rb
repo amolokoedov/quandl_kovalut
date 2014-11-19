@@ -15,6 +15,14 @@ def describe(bank)
 	return case bank
 	when "Сбербанк России" 
 		["SBER", "Sberbank"]
+	when "БКС Банк" 
+		["BKS", "BKS Bank"]
+	when "СКБ-банк" 
+		["SKB", "SKB Bank"]
+	when "БИНБАНК" 
+		["BIN", "Binbank"]
+	when "АК БАРС БАНК" 
+		["AKBARS", "AK BARS Bank"]
 	else 
 		[bank, bank]
 	end
